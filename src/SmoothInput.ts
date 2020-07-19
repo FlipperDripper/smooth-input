@@ -38,16 +38,14 @@ export class SmoothInput {
 
 
     constructor(element: HTMLElement, config: SmoothInputOptions = defaultConfig) {
-        if(config !== defaultConfig) {
+        if (config !== defaultConfig) {
             this._config = {...defaultConfig, ...config}
         } else {
             this._config = config
         }
         this._element = element
         this._interval = new Interval()
-        this.addClassToElement(ELEMENT_CLASSES.primary)
-        this.initCarriage()
-        this.init()
+        this.beforeInputHook()
     }
 
     protected get smoothText() {
@@ -67,10 +65,12 @@ export class SmoothInput {
         } else {
             this.initInputInterval()
         }
+        this.initCarriage()
+        this.addClassToElement(ELEMENT_CLASSES.primary)
     }
 
     protected initCarriage() {
-        if(!this._config.carriage.visible) {
+        if (!this._config.carriage.visible) {
             this.hideCarriage()
         }
     }
@@ -95,6 +95,7 @@ export class SmoothInput {
             const symbol = this._textContent[symbolIndex]
             if (this.smoothText.length === this._textContent.length) {
                 this._interval.clear()
+                this.afterInputHook()
             }
             if (this._config.symbolsDelay && symbol in this._config.symbolsDelay) {
                 this._interval.pause()
@@ -122,6 +123,17 @@ export class SmoothInput {
         const notExistingClasses = classes.filter((cls) => !this._element.classList.contains(cls))
         this._element.classList.add(...notExistingClasses)
     }
+
+    protected afterInputHook() {
+        const {hideDelay, hideAfterInput} = this._config.carriage
+        if (hideAfterInput) {
+            setTimeout(this.hideCarriage.bind(this), hideDelay || 0)
+        }
+    }
+
+    protected beforeInputHook() {
+        this.init()
+    }
 }
 
 export type SmoothInputOptions = {
@@ -139,7 +151,7 @@ export type SmoothInputOptions = {
      * Delay for certain symbols
      * @default {}
      */
-    symbolsDelay?: {[key: string]: number}
+    symbolsDelay?: { [key: string]: number }
     /**
      * Content of target element. If there isn't take textContent of element
      * @default null
