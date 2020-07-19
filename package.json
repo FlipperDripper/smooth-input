@@ -1,6 +1,6 @@
 {
   "name": "smooth-input",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -15,5 +15,14 @@
     "typedoc-plugin-markdown": "^2.3.1",
     "typescript": "^3.9.7"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FlipperDripper/smooth-input"
+  },
+  "bugs": {
+    "url": "https://github.com/FlipperDripper/smooth-input/issues",
+    "email": "mtarasov777@gmail.com"
+  },
+  "homepage": "https://github.com/FlipperDripper/smooth-input"
 }
