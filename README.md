@@ -6,7 +6,7 @@ Library for imitate human input
 npm i smooth-input
 ```
 ### Simple example
-![Demo Animation](../assets/example.gif?raw=true)
+![Demo Animation](https://media2.giphy.com/media/hsUfkT5rmqvk2DgCxS/giphy.gif)
 
 ```typescript
 import {SmoothInput} from 'smooth-input';
