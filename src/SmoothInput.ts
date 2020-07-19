@@ -2,6 +2,7 @@ import {Interval} from "./Interval";
 
 const ELEMENT_CLASSES = {
     primary: 'smooth-text-container',
+    carriageHide: 'smooth-text-container--carriage-hide'
 }
 const defaultConfig: SmoothInputOptions = {
     symbolsPerSecond: 10,
@@ -17,23 +18,23 @@ export class SmoothInput {
     /**
      * Text for printing
      */
-    private _smoothText = ''
+    protected _smoothText = ''
     /**
      * Content of target element
      */
-    private _textContent = ''
+    protected _textContent = ''
     /**
      * Element which contain text
      */
-    private _element: HTMLElement
+    protected _element: HTMLElement
     /**
      * SmoothInput config
      */
-    private _config: SmoothInputOptions
+    protected _config: SmoothInputOptions
     /**
      * Interval id
      */
-    private _interval: Interval
+    protected _interval: Interval
 
 
     constructor(element: HTMLElement, config: SmoothInputOptions = defaultConfig) {
@@ -45,19 +46,20 @@ export class SmoothInput {
         this._element = element
         this._interval = new Interval()
         this.addClassToElement(ELEMENT_CLASSES.primary)
+        this.initCarriage()
         this.init()
     }
 
-    get smoothText() {
+    protected get smoothText() {
         return this._smoothText
     }
 
-    set smoothText(val) {
+    protected set smoothText(val) {
         this._smoothText = val
         this.print(this.smoothText)
     }
 
-    init() {
+    protected init() {
         this._textContent = this._config.text || this._element.innerText
         this.clearElementContent()
         if (this._config.delay) {
@@ -67,13 +69,23 @@ export class SmoothInput {
         }
     }
 
-    initInputInterval() {
+    protected initCarriage() {
+        if(!this._config.carriage.visible) {
+            this.hideCarriage()
+        }
+    }
+
+    protected hideCarriage() {
+        this.addClassToElement(ELEMENT_CLASSES.carriageHide)
+    }
+
+    protected initInputInterval() {
         const interval = 1000 / this._config.symbolsPerSecond
         this._interval = new Interval(this.inputText(), interval)
         this._interval.start()
     }
 
-    inputText() {
+    protected inputText() {
         let symbolIndex = 0
         const updateSmoothText = () => {
             this.smoothText = this._textContent.slice(0, symbolIndex + 1)
@@ -98,15 +110,15 @@ export class SmoothInput {
 
     }
 
-    print(text: string) {
+    protected print(text: string) {
         this._element.innerText = text
     }
 
-    clearElementContent() {
+    protected clearElementContent() {
         this.print('')
     }
 
-    addClassToElement(...classes: string[]) {
+    protected addClassToElement(...classes: string[]) {
         const notExistingClasses = classes.filter((cls) => !this._element.classList.contains(cls))
         this._element.classList.add(...notExistingClasses)
     }
