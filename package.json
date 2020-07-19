@@ -11,12 +11,6 @@
   "author": "Matvey Tarasov <mtarasov777@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/preset-env": "^7.10.4",
-    "jsdoc": "^3.6.4",
-    "tsdoc": "0.0.4",
     "typedoc": "^0.17.8",
     "typedoc-plugin-markdown": "^2.3.1",
     "typescript": "^3.9.7"
