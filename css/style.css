@@ -1,0 +1,16 @@
+.smooth-text-container {}
+.smooth-text-container:after {
+    content: '|';
+    font-size: 1.1em;
+    font-weight: inherit;
+    opacity: 1;
+    animation: flicker 1000ms infinite steps(1);
+    position: relative;
+    top: -0.1em;
+}
+
+@keyframes flicker {
+    50% {
+        opacity: 0;
+    }
+}
