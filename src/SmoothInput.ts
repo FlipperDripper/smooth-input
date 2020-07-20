@@ -87,8 +87,8 @@ export class SmoothInput {
 
     protected inputText() {
         let symbolIndex = 0
-        const updateSmoothText = () => {
-            this.smoothText = this._textContent.slice(0, symbolIndex + 1)
+        const updateSmoothText = (symbol: string) => {
+            this.smoothText += symbol
             symbolIndex++
         }
         return () => {
@@ -96,16 +96,17 @@ export class SmoothInput {
             if (this.smoothText.length === this._textContent.length) {
                 this._interval.clear()
                 this.afterInputHook()
+                return
             }
             if (this._config.symbolsDelay && symbol in this._config.symbolsDelay) {
                 this._interval.pause()
                 setTimeout(() => {
-                    updateSmoothText()
+                    updateSmoothText(symbol)
                     this._interval.continue()
                 }, this._config.symbolsDelay[symbol])
 
             } else {
-                updateSmoothText()
+                updateSmoothText(symbol)
             }
         }
 
