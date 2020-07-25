@@ -23,4 +23,7 @@ export class Interval {
     clear() {
         clearInterval(this._interval)
     }
+    isActive() {
+        return Boolean(this._interval)
+    }
 }
