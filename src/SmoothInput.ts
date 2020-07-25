@@ -22,7 +22,7 @@ export class SmoothInput {
     /**
      * Content of target element
      */
-    protected _textContent = ''
+    protected _textContent: string[] = []
     /**
      * Element which contain text
      */
@@ -57,8 +57,11 @@ export class SmoothInput {
         this.print(this.smoothText)
     }
 
+    protected setTextContent(val: string | string[]) {
+        this._textContent = Array.isArray(val) ? val: val.split('')
+    }
     protected init() {
-        this._textContent = this._config.text || this._element.innerText
+        this.setTextContent(this._config.text || this._element.innerText)
         this.clearElementContent()
         if (this._config.delay) {
             setTimeout(() => this.initInputInterval(), this._config.delay)
@@ -86,15 +89,13 @@ export class SmoothInput {
     }
 
     protected inputText() {
-        let symbolIndex = 0
         const updateSmoothText = (symbol: string) => {
             this.smoothText += symbol
-            symbolIndex++
         }
         return () => {
-            const symbol = this._textContent[symbolIndex]
-            if (this.smoothText.length === this._textContent.length) {
-                this._interval.clear()
+            const symbol = this._textContent.shift()
+            if (symbol === undefined) {
+                this.clearInterval()
                 this.afterInputHook()
                 return
             }
@@ -135,9 +136,39 @@ export class SmoothInput {
     protected beforeInputHook() {
         this.init()
     }
+
+    protected clearInterval() {
+        if (this._interval.isActive()) {
+            this._interval.clear()
+        }
+    }
+
+    /**
+     * Removing old text and start input new one
+     * @param text
+     */
+    public setText(text: string) {
+        this.clearInterval()
+        this.smoothText = ''
+        this.setTextContent(text)
+        this.initInputInterval()
+    }
+
+    /**
+     * Adding text to enter at the end
+     * @param text
+     */
+    public addTextToEnd(text: string) {
+        this.clearInterval()
+        this.setTextContent(text)
+        this.initInputInterval()
+    }
 }
 
-export type SmoothInputOptions = {
+/**
+ * Library options, argument of SmoothInput constructor
+ */
+export interface SmoothInputOptions {
     /**
      * Count of symbols per second
      * @default 10
@@ -164,7 +195,10 @@ export type SmoothInputOptions = {
     carriage?: CarriageOptions
 }
 
-type CarriageOptions = {
+/**
+ * Definition of carriage behavior
+ */
+interface CarriageOptions  {
     /**
      * Visibility of carriage
      * @default true
